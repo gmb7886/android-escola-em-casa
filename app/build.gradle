@@ -21,7 +21,7 @@ android {
     }
 
     // Adicionando ndkVersion para evitar dependência do ANDROID_NDK_HOME
-    ndkVersion "21.3.6528147" // Coloque a versão que você estiver utilizando
+    ndkVersion "27.2.12479018" // Coloque a versão que você estiver utilizando
 
     buildTypes {
         release {
