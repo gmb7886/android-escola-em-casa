@@ -20,18 +20,22 @@ jobs:
           java-version: '11'
 
       - name: Set up Android SDK
-        uses: ReactiveCircus/android-sdk-setup-action@v2
-        with:
-          sdk-version: '33'  # Ou outra versão que você esteja utilizando
-          ndk-version: '21.4.7075529'  # NDK versão necessária
+        run: |
+          # Instala o Android SDK
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip
+          unzip commandlinetools-linux-8092744_latest.zip -d $HOME/android-sdk
+          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk --licenses
+          $HOME/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-33" "ndk;21.4.7075529"
 
       - name: Install dependencies
         run: |
-          yes | sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-33"  # Ajuste conforme a sua versão
           ./gradlew --no-daemon clean
 
       - name: Build APK
-        run: ./gradlew assembleDebug --no-daemon  # Usar o wrapper do gradle para construir
+        run: |
+          ./gradlew assembleDebug --no-daemon  # Usar o wrapper do gradle para construir
 
       - name: Upload APK
         uses: actions/upload-artifact@v3  # Atualizado para v3
