@@ -40,10 +40,7 @@ public class MyApplication extends Application implements SdStateChangeListener 
         } else if (sdState == SdState.SD_NOT_AVAILABLE) {
             text = "Seu acesso a esse site poderá acarretar cobranças em seu plano de dados.";
             Log.d(TAG, " - Razão: " + currentSmiResult.getSdReason());
-            // Reconectar à VPN automaticamente
-            ensureVpnConnected();
         } else if (sdState == SdState.WIFI) {
-            // Dispositivo conectado via Wi-Fi
             text = "Acesso via Wi-Fi.";
             Log.d(TAG, "Wi-Fi - Razão: " + currentSmiResult.getSdReason());
         }
@@ -51,28 +48,14 @@ public class MyApplication extends Application implements SdStateChangeListener 
         showToast(text);
     }
 
-    // Método para garantir que a VPN esteja conectada
     private void ensureVpnConnected() {
         if (sdState != SdState.SD_AVAILABLE) {
-            Log.d(TAG, "Tentando reconectar à VPN...");
-            try {
-                // Tentativa alternativa caso o método reconnect() não exista
-                if (SmiVpnSdk.isVpnConnected()) {
-                    Log.d(TAG, "VPN já conectada.");
-                } else {
-                    // Se o SDK tiver outro método para reconectar ou reconfigurar a VPN
-                    SmiVpnSdk.reconnect();
-                    Log.d(TAG, "Tentativa de reconexão à VPN.");
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Erro ao tentar reconectar à VPN: " + e.getMessage());
-            }
+            Log.d(TAG, "VPN não está disponível, reconexão não tentada.");
         } else {
             Log.d(TAG, "VPN já está conectada.");
         }
     }
 
-    // Método utilitário para exibir Toasts
     private void showToast(CharSequence text) {
         if (toast != null) {
             toast.cancel();
