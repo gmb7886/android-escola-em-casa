@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 33 // Atualizando para uma versão mais recente do SDK
-    buildToolsVersion "30.0.3" // Atualizando para uma versão recente do buildTools
+    compileSdkVersion 33
+    buildToolsVersion "30.0.3"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -12,28 +12,23 @@ android {
     defaultConfig {
         applicationId "org.cordova.quasar.corona.app"
         minSdkVersion 17
-        targetSdkVersion 33 // Atualizando para o SDK 33
+        targetSdkVersion 33
         versionCode 9
         versionName "2.3"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
 
-    // Adicionando ndkVersion para evitar dependência do ANDROID_NDK_HOME
-    ndkVersion "27.2.12479018" // Coloque a versão que você estiver utilizando
+        ndk {
+            version "27.2.12479018"
+            abiFilters 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64'
+        }
+    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    // Especificando ABIs suportadas para evitar a inclusão de "riscv64"
-    defaultConfig {
-        ndk {
-            abiFilters 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64'  // Removendo ABIs não necessárias
         }
     }
 }
