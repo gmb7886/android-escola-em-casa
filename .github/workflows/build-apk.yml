@@ -31,7 +31,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ./gradlew --no-daemon clean
+          ./gradlew dependencies --no-daemon  # Baixa as dependências do Gradle
 
       - name: Build APK
         run: |
