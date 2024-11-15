@@ -61,7 +61,7 @@ public class MyApplication extends Application implements SdStateChangeListener 
                     Log.d(TAG, "VPN já conectada.");
                 } else {
                     // Se o SDK tiver outro método para reconectar ou reconfigurar a VPN
-                    SmiVpnSdk.reconnect();  // Se o método estiver disponível, ele será chamado
+                    SmiVpnSdk.reconnect();
                     Log.d(TAG, "Tentativa de reconexão à VPN.");
                 }
             } catch (Exception e) {
