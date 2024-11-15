@@ -23,24 +23,50 @@ public class MyApplication extends Application implements SdStateChangeListener 
         super.onCreate();
         context = getApplicationContext();
         duration = Toast.LENGTH_LONG;
-        String mySdkKey = "SUBSTITUIR_POR_CHAVE_DATAMI"; //Use the SDK API access key given by Datami.
+        String mySdkKey = "SUBSTITUIR_POR_CHAVE_DATAMI";
         SmiVpnSdk.initSponsoredData(mySdkKey, this, R.drawable.ic_launcher_background, MessagingType.NONE);
+        Log.d(TAG, "VPN Inicializada");
+        ensureVpnConnected();
     }
 
     @Override
     public void onChange(SmiResult currentSmiResult) {
         sdState = currentSmiResult.getSdState();
-        Log.d(TAG, "sponsored data state : " + sdState);
+        Log.d(TAG, "Estado da VPN: " + sdState);
+
         CharSequence text = "";
         if (sdState == SdState.SD_AVAILABLE) {
             text = "Seu acesso a esse site é gratuito.";
         } else if (sdState == SdState.SD_NOT_AVAILABLE) {
             text = "Seu acesso a esse site poderá acarretar cobranças em seu plano de dados.";
-            Log.d(TAG, " - reason: " + currentSmiResult.getSdReason());
+            Log.d(TAG, " - Razão: " + currentSmiResult.getSdReason());
+            // Reconectar à VPN automaticamente
+            ensureVpnConnected();
         } else if (sdState == SdState.WIFI) {
-            // device is in wifi
-            text = "Acesso via wifi.";
-            Log.d(TAG, "wifi - reason: " + currentSmiResult.getSdReason());
+            // Dispositivo conectado via Wi-Fi
+            text = "Acesso via Wi-Fi.";
+            Log.d(TAG, "Wi-Fi - Razão: " + currentSmiResult.getSdReason());
         }
+
+        showToast(text);
+    }
+
+    // Método para garantir que a VPN esteja conectada
+    private void ensureVpnConnected() {
+        if (sdState != SdState.SD_AVAILABLE) {
+            Log.d(TAG, "Reconectando à VPN...");
+            SmiVpnSdk.reconnect();
+        } else {
+            Log.d(TAG, "VPN já está conectada.");
+        }
+    }
+
+    // Método utilitário para exibir Toasts
+    private void showToast(CharSequence text) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }
